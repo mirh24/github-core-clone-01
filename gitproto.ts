@@ -870,7 +870,8 @@ export function handleReceivePack(forge: Forge, owner: string, name: string, bod
       try {
         const objects = parsePack(packBytes, forge.objects);
         for (const [oid, object] of objects) {
-          if (forge.objects.get(oid) === undefined) forge.objects.put(object.type, object.data);
+          // parsePack already computed every oid: store without re-hashing.
+          if (forge.objects.get(oid) === undefined) forge.objects.putKnown(oid, object.type, object.data);
         }
       } catch (err) {
         unpackOk = false;
